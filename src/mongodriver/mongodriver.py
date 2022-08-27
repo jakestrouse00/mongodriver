@@ -88,7 +88,6 @@ class Driver:
         """CONNECT TO THE DB"""
         self.client = pymongo.MongoClient(self.connection_url)[self.db_name][self.collection_name]
 
-
     def create(self, data: dict) -> Document:
         """CREATE A DOCUMENT FROM A DICT AND RETURN THE Document OBJECT"""
         document = self.client.insert_one(data)

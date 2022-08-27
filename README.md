@@ -11,7 +11,8 @@ Features
 * Update documents without needing to use json
 * Use pymongo within the package as well
 * Built with type hints
-* Removes a lot of boilerplate code
+* Removes a lot of [boilerplate](pymongo_vs_mongodriver/README.md) code 
+* So simple it works like ✨magic ✨
 
 
 Quickstart
@@ -47,7 +48,7 @@ print(new_document.foo)  # 1
 new_document.foo = 2
 print(new_document.foo)  # 2
 
-# you can also change the value of an attribute with the Driver.VarClass.update() method
+# you can also change the value of an attribute with the Driver.Variable.update() method
 
 new_document.foo.update(3)
 
