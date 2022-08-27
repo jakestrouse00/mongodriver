@@ -1,3 +1,18 @@
+Metadata-Version: 2.1
+Name: mongodriver
+Version: 1.0.10
+Summary: Object-oriented interactions with MongoDB
+Author: Jake Strouse
+Author-email: jstrouse@meh.llc
+License: MIT
+Keywords: mongodb
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+
 # MongoDriver
 
 An object-oriented package for interacting with MongoDB documents
@@ -11,7 +26,6 @@ Features
 * Update documents without needing to use json
 * Use pymongo within the package as well
 * Built with type hints
-* Removes a lot of boilerplate code
 
 
 Quickstart
@@ -96,3 +110,4 @@ new_document.set({"new_val1": 15, "new_val2": 10})
 print(new_document) 
 
 ```
+
