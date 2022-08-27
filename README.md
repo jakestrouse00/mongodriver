@@ -98,7 +98,7 @@ new_document.set({"new_val1": 15, "new_val2": 10})
 # OR
 
 new_document.new_val1 = 15
-new_document.new_val2 = 15
+new_document.new_val2 = 10
 
 print(new_document)
 
