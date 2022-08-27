@@ -9,6 +9,7 @@ class Document:
     _id: str = field(repr=True)
     variables: dict
     client: pymongo.collection.Collection = field(repr=False)
+    _initialized: bool = field(repr=False, default=False)
 
     def __post_init__(self):
         if "_id" in self.variables.keys():
@@ -16,6 +17,7 @@ class Document:
         for variable in self.variables.keys():
             class_value = Variable(self._id, variable, self.variables[variable], self.client, self)
             setattr(self, variable, class_value)
+        self._initialized = True
 
     def set(self, new_values: dict):
         """ADDS NEW VARIABLES TO THE DOCUMENT"""
@@ -51,7 +53,12 @@ class Document:
             else:
                 self.__dict__[key] = value
         except Exception:
-            self.__dict__[key] = value
+            if self._initialized:
+                # object has been initialized, so we are making a new variable
+                self.set({key: value})
+            else:
+                # object has not yet been initialized, so we are just updating the __dict__
+                self.__dict__[key] = value
 
 
 @dataclass
@@ -139,5 +146,7 @@ if __name__ == '__main__':
     x = Driver(
         connection_url="mongodb+srv://Influxes:test@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
         db_name="ev_runtime", collection_name="test_model")
-    k = x.find({"hey": "dude"})[0]
-    print(k.asdict())
+    doc = x.create({"name": "dude", "year": 2007})
+    print(doc)
+    doc.size = "XL"
+    print(doc)

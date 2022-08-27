@@ -6,11 +6,12 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='mongodriver',
-    version='1.1.0',
+    version='1.1.1',
     license='MIT',
     author="Jake Strouse",
     author_email='jstrouse@meh.llc',
     packages=find_packages('src'),
+    url='https://github.com/jakestrouse00/mongodriver',
     package_dir={'': 'src'},
     keywords='mongodb',
     install_requires=[
@@ -24,6 +25,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.8",
 
 )

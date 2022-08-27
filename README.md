@@ -94,6 +94,11 @@ json_document = {"foo": 1, "bar": 2}
 new_document = driver.create(json_document)
 
 new_document.set({"new_val1": 15, "new_val2": 10})
-print(new_document) 
+
+# OR
+
+new_document.new_val1 = 15
+
+print(new_document)
 
 ```
