@@ -37,6 +37,9 @@ class Document:
             # setattr(self, variable, class_value)
             self.__dict__[variable] = class_value
 
+    def remove(self):
+        self.client.find_one_and_delete({"_id": ObjectId(self._id)})
+
     def asdict(self) -> dict:
         return self.variables
 
