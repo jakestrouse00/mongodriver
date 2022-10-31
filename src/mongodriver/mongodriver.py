@@ -15,7 +15,9 @@ class Document:
         if "_id" in self.variables.keys():
             self.variables.pop("_id")
         for variable in self.variables.keys():
-            class_value = Variable(self._id, variable, self.variables[variable], self.client, self)
+            class_value = Variable(
+                self._id, variable, self.variables[variable], self.client, self
+            )
             setattr(self, variable, class_value)
         self._initialized = True
 
@@ -26,12 +28,12 @@ class Document:
             new_values.pop("_id")
         self.client.find_one_and_update(
             {"_id": ObjectId(self._id)},
-            {
-                "$set": new_values
-            },
+            {"$set": new_values},
         )
         for variable in new_values.keys():
-            class_value = Variable(self._id, variable, new_values[variable], self.client, self)
+            class_value = Variable(
+                self._id, variable, new_values[variable], self.client, self
+            )
 
             self.variables[variable] = new_values[variable]
             # setattr(self, variable, class_value)
@@ -96,7 +98,9 @@ class Driver:
 
     def __post_init__(self):
         """CONNECT TO THE DB"""
-        self.client = pymongo.MongoClient(self.connection_url)[self.db_name][self.collection_name]
+        self.client = pymongo.MongoClient(self.connection_url)[self.db_name][
+            self.collection_name
+        ]
 
     def create(self, data: dict) -> Document:
         """CREATE A DOCUMENT FROM A DICT AND RETURN THE Document OBJECT"""
@@ -145,10 +149,12 @@ class ObjectPacker:
         return input_object.__dict__
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     x = Driver(
         connection_url="mongodb+srv://Influxes:test@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-        db_name="ev_runtime", collection_name="test_model")
+        db_name="ev_runtime",
+        collection_name="test_model",
+    )
     doc = x.create({"name": "dude", "year": 2007})
     print(doc)
     doc.size = "XL"
