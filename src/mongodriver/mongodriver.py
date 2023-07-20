@@ -115,27 +115,35 @@ class Driver:
         python_document = Document(document.inserted_id, data, self.client)
         return python_document
 
-    def update(self, data: dict | Document, new_values: dict, sort: dict = None) -> Document:
+    def update(
+        self, data: dict | Document, new_values: dict, sort: dict = None
+    ) -> Document:
         if "_id" in new_values.keys():
             new_values.pop("_id")
         if isinstance(data, Document):
             if sort is not None:
                 sort = sort.items()
-            self.client.find_one_and_update(filter={"_id": ObjectId(data._id)}, update={"$set" :new_values}, sort=sort, return_document=True)
+            self.client.find_one_and_update(
+                filter={"_id": ObjectId(data._id)},
+                update={"$set": new_values},
+                sort=sort,
+                return_document=True,
+            )
             for _, (key, value) in enumerate(new_values.items()):
-                class_value = Variable(
-                    data._id, key, value, self.client, data
-                )
+                class_value = Variable(data._id, key, value, self.client, data)
 
                 data.variables[key] = new_values[key]
                 # setattr(self, variable, class_value)
                 data.__dict__[key] = class_value
             return data
         else:
-            document = self.client.find_one_and_update(filter=data, update={"$set": update},
-                                                       sort=sort.items(), return_document=True)
+            document = self.client.find_one_and_update(
+                filter=data,
+                update={"$set": update},
+                sort=sort.items(),
+                return_document=True,
+            )
             return Document(document.inserted_id, data, self.client)
-
 
     def remove(self, data: dict | Document):
         if isinstance(data, Document):
@@ -158,7 +166,9 @@ class Driver:
 
     def find(self, search_terms: dict) -> List[Document] | None:
         """FIND A DOCUMENT AND RETURN IT AS A Document CLASS"""
-        if "_id" in search_terms.keys() and not isinstance(search_terms["_id"], ObjectId):
+        if "_id" in search_terms.keys() and not isinstance(
+            search_terms["_id"], ObjectId
+        ):
             search_terms["_id"] = ObjectId(search_terms["_id"])
         processed_documents = []
         documents = self.client.find(search_terms)
@@ -171,7 +181,9 @@ class Driver:
         return processed_documents
 
     def find_one(self, search_terms: dict) -> Document | None:
-        if "_id" in search_terms.keys() and not isinstance(search_terms["_id"], ObjectId):
+        if "_id" in search_terms.keys() and not isinstance(
+            search_terms["_id"], ObjectId
+        ):
             search_terms["_id"] = ObjectId(search_terms["_id"])
         document = self.client.find_one(search_terms)
         if document is None:
@@ -179,9 +191,6 @@ class Driver:
         doc_id = str(document["_id"])
         python_document = Document(doc_id, document, self.client)
         return python_document
-
-
-
 
 
 class ObjectPacker:
