@@ -89,6 +89,13 @@ class Variable:
         self.value = new_value
         self.parent_document.variables[self.key] = new_value
 
+    def remove(self):
+        self.client.find_one_and_update(
+            {"_id": ObjectId(self._id)}, {"$unset": {self.key: ""}}
+        )
+        self.parent_document.variables.pop(self.key)
+        self.parent_document.__dict__.pop(self.key)
+
 
 @dataclass
 class Driver:
@@ -108,6 +115,36 @@ class Driver:
         python_document = Document(document.inserted_id, data, self.client)
         return python_document
 
+    def update(self, data: dict | Document, new_values: dict, sort: dict = None) -> Document:
+        if "_id" in new_values.keys():
+            new_values.pop("_id")
+        if isinstance(data, Document):
+            if sort is not None:
+                sort = sort.items()
+            self.client.find_one_and_update(filter={"_id": ObjectId(data._id)}, update={"$set" :new_values}, sort=sort, return_document=True)
+            for _, (key, value) in enumerate(new_values.items()):
+                class_value = Variable(
+                    data._id, key, value, self.client, data
+                )
+
+                data.variables[key] = new_values[key]
+                # setattr(self, variable, class_value)
+                data.__dict__[key] = class_value
+            return data
+        else:
+            document = self.client.find_one_and_update(filter=data, update={"$set": update},
+                                                       sort=sort.items(), return_document=True)
+            return Document(document.inserted_id, data, self.client)
+
+
+    def remove(self, data: dict | Document):
+        if isinstance(data, Document):
+            self.client.find_one_and_delete({"_id": ObjectId(data._id)})
+        else:
+            if "_id" in data.keys() and not isinstance(data["_id"], ObjectId):
+                data["_id"] = ObjectId(data["_id"])
+            self.client.find_one_and_delete(data)
+
     def load(self) -> List[Document]:
         """LOADS ALL DOCUMENTS FROM DB INTO Document CLASSES"""
         documents = self.client.find({})
@@ -119,18 +156,32 @@ class Driver:
             loaded_documents.append(python_document)
         return loaded_documents
 
-    def find(self, search_terms: dict) -> List[Document]:
+    def find(self, search_terms: dict) -> List[Document] | None:
         """FIND A DOCUMENT AND RETURN IT AS A Document CLASS"""
-        if "_id" in search_terms.keys():
-            if type(search_terms["_id"]) != ObjectId:
-                search_terms["_id"] = ObjectId(search_terms["_id"])
+        if "_id" in search_terms.keys() and not isinstance(search_terms["_id"], ObjectId):
+            search_terms["_id"] = ObjectId(search_terms["_id"])
         processed_documents = []
         documents = self.client.find(search_terms)
+        if len(documents) == 0:
+            return None
         for document in documents:
             doc_id = str(document["_id"])
             python_document = Document(doc_id, document, self.client)
             processed_documents.append(python_document)
         return processed_documents
+
+    def find_one(self, search_terms: dict) -> Document | None:
+        if "_id" in search_terms.keys() and not isinstance(search_terms["_id"], ObjectId):
+            search_terms["_id"] = ObjectId(search_terms["_id"])
+        document = self.client.find_one(search_terms)
+        if document is None:
+            return None
+        doc_id = str(document["_id"])
+        python_document = Document(doc_id, document, self.client)
+        return python_document
+
+
+
 
 
 class ObjectPacker:
@@ -150,12 +201,18 @@ class ObjectPacker:
 
 
 if __name__ == "__main__":
+    # mongodb+srv://Influxes:test@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
     x = Driver(
         connection_url="mongodb+srv://Influxes:test@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
         db_name="ev_runtime",
         collection_name="test_model",
     )
-    doc = x.create({"name": "dude", "year": 2007})
-    print(doc)
-    doc.size = "XL"
-    print(doc)
+    # x.remove({"_id": "64b94bcbc98f284f29a7a502"})
+    # doc = x.create({"name": "dude", "year": 2007})
+    # print(doc)
+    # doc.size = "UP"
+    # print(doc)
+    # x.update(doc, {"name": "charlie"})
+    # print(doc)
+    # x.remove(doc)
+    print(x.find_one({"_id": "64b94bcbc98f284f29a7a503"}))

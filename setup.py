@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='mongodriver',
-    version='1.2.0',
+    version='1.2.1',
     license='MIT',
     author="Jake Strouse",
     author_email='jstrouse@meh.llc',
@@ -16,6 +16,7 @@ setup(
     keywords='mongodb',
     install_requires=[
         'pymongo==3.12.0',
+        'pymongo[srv]'
     ],
     description='Object-oriented interactions with MongoDB',
     long_description=long_description,
@@ -25,6 +26,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.10",
 
 )
