@@ -1,4 +1,4 @@
-from mongodriver.mongodriver import Driver
+from mongodriver.src.mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
@@ -7,4 +7,5 @@ driver = Driver(
 documents = driver.load()  # loads all documents from db into local Document objects
 for document in documents:
     print(document)
+
 

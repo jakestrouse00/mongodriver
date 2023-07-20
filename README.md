@@ -22,10 +22,11 @@ Install MongoDriver
 `python3 -m pip install mongodriver`
 
 ```python
-from mongodriver.mongodriver import Driver
+from mongodriver.src.mongodriver import Driver
+
 driver = Driver(
-        connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-        db_name="example_db", collection_name="example_collection")
+    connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    db_name="example_db", collection_name="example_collection")
 ```
    
 Examples
@@ -33,11 +34,11 @@ Examples
 Here is a basic example on how to create a new document and then interact it
 
 ```python
-from mongodriver.mongodriver import Driver
+from mongodriver.src.mongodriver import Driver
 
 driver = Driver(
-        connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-        db_name="example_db", collection_name="example_collection")
+    connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    db_name="example_db", collection_name="example_collection")
 
 new_document = driver.create({"foo": 1, "bar": 2})
 
@@ -56,8 +57,9 @@ print(new_document.foo)  # 3
 ```
 
 Find a document
+
 ```python
-from mongodriver.mongodriver import Driver
+from mongodriver.src.mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
@@ -70,8 +72,9 @@ for document in documents:
 ```
 
 Load all documents from MongoDB into Document objects
+
 ```python
-from mongodriver.mongodriver import Driver
+from mongodriver.src.mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
@@ -83,12 +86,13 @@ for document in documents:
 ```
 
 Add more keys into a document
+
 ```python
-from mongodriver.mongodriver import Driver
+from mongodriver.src.mongodriver import Driver
 
 driver = Driver(
-        connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-        db_name="example_db", collection_name="example_collection")
+    connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    db_name="example_db", collection_name="example_collection")
 
 json_document = {"foo": 1, "bar": 2}
 new_document = driver.create(json_document)
