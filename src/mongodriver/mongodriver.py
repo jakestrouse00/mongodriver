@@ -3,6 +3,7 @@ from typing import Any, List, Union, Dict
 from dataclasses import dataclass, field
 from bson import ObjectId
 
+__version__ = "1.2.41"
 
 @dataclass
 class Document:
