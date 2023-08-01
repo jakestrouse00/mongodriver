@@ -137,6 +137,8 @@ class Driver:
                 data.__dict__[key] = class_value
             return data
         else:
+            if "_id" in data.keys() and not isinstance(data["_id"], ObjectId):
+                data["_id"] = ObjectId(data["_id"])
             document = self.client.find_one_and_update(
                 filter=data,
                 update={"$set": update},

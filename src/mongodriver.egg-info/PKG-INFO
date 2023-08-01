@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: mongodriver
-Version: 1.2.42
+Version: 1.2.5
 Summary: Object-oriented interactions with MongoDB
 Home-page: https://github.com/jakestrouse00/mongodriver
 Author: Jake Strouse
