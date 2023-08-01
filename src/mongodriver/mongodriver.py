@@ -3,7 +3,6 @@ from typing import Any, List, Union, Dict
 from dataclasses import dataclass, field
 from bson import ObjectId
 
-__version__ = "1.2.41"
 
 @dataclass
 class Document:
@@ -117,7 +116,7 @@ class Driver:
         return python_document
 
     def update(
-        self, data: dict | Document, new_values: dict, sort: dict = None
+            self, data: dict | Document, new_values: dict, sort: dict = None
     ) -> Document:
         if "_id" in new_values.keys():
             new_values.pop("_id")
@@ -168,7 +167,7 @@ class Driver:
     def find(self, search_terms: dict) -> List[Document]:
         """FIND A DOCUMENT AND RETURN IT AS A Document CLASS"""
         if "_id" in search_terms.keys() and not isinstance(
-            search_terms["_id"], ObjectId
+                search_terms["_id"], ObjectId
         ):
             search_terms["_id"] = ObjectId(search_terms["_id"])
         processed_documents = []
@@ -181,7 +180,7 @@ class Driver:
 
     def find_one(self, search_terms: dict) -> Document | None:
         if "_id" in search_terms.keys() and not isinstance(
-            search_terms["_id"], ObjectId
+                search_terms["_id"], ObjectId
         ):
             search_terms["_id"] = ObjectId(search_terms["_id"])
         document = self.client.find_one(search_terms)
