@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='mongodriver',
-    version='1.2.1',
+    version='1.2.3',
     license='MIT',
     author="Jake Strouse",
     author_email='jstrouse@meh.llc',

@@ -164,7 +164,7 @@ class Driver:
             loaded_documents.append(python_document)
         return loaded_documents
 
-    def find(self, search_terms: dict) -> List[Document] | None:
+    def find(self, search_terms: dict) -> List[Document]:
         """FIND A DOCUMENT AND RETURN IT AS A Document CLASS"""
         if "_id" in search_terms.keys() and not isinstance(
             search_terms["_id"], ObjectId
@@ -172,8 +172,6 @@ class Driver:
             search_terms["_id"] = ObjectId(search_terms["_id"])
         processed_documents = []
         documents = self.client.find(search_terms)
-        if len(documents) == 0:
-            return None
         for document in documents:
             doc_id = str(document["_id"])
             python_document = Document(doc_id, document, self.client)
