@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from mongodriver.mongodriver import Driver
+from mongodriver import Driver
 
 
 def creating_document_and_updating_with_mongodriver():

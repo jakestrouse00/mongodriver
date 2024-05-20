@@ -22,7 +22,7 @@ Install MongoDriver
 `python3 -m pip install mongodriver`
 
 ```python
-from mongodriver.mongodriver import Driver
+from mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
@@ -34,7 +34,7 @@ Examples
 Here is a basic example on how to create a new document and then interact it
 
 ```python
-from mongodriver.mongodriver import Driver
+from mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
@@ -49,6 +49,10 @@ print(new_document.foo)  # 1
 new_document.foo = 2
 print(new_document.foo)  # 2
 
+# OR
+
+new_document.set({"foo": 2})
+
 # you can also change the value of an attribute with the Driver.Variable.update() method
 
 new_document.foo.update(3)
@@ -59,7 +63,7 @@ print(new_document.foo)  # 3
 Find a document
 
 ```python
-from mongodriver.mongodriver import Driver
+from mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
@@ -67,20 +71,7 @@ driver = Driver(
 
 search_query = {"foo": 1}
 documents = driver.find(search_query)  # returns a list of documents
-for document in documents:
-    print(document)
-```
-
-Load all documents from MongoDB into Document objects
-
-```python
-from mongodriver.mongodriver import Driver
-
-driver = Driver(
-    connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    db_name="example_db", collection_name="example_collection")
-
-documents = driver.load()  # loads all documents from db into local Document objects
+# or driver.find_one(search_query) to get only one document
 for document in documents:
     print(document)
 ```
@@ -88,7 +79,7 @@ for document in documents:
 Add more keys into a document
 
 ```python
-from mongodriver.mongodriver import Driver
+from mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",

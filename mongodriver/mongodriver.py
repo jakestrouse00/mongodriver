@@ -12,6 +12,10 @@ class Document:
     _initialized: bool = field(repr=False, default=False)
 
     def __post_init__(self):
+        """
+        Post-initialization method for the Document class.
+        Removes '_id' from variables if present and initializes Variable instances for each variable.
+        """
         if "_id" in self.variables.keys():
             self.variables.pop("_id")
         for variable in self.variables.keys():
@@ -22,7 +26,12 @@ class Document:
         self._initialized = True
 
     def set(self, new_values: dict):
-        """ADDS NEW VARIABLES TO THE DOCUMENT"""
+        """
+        Adds new variables to the document and updates the database.
+
+        Parameters:
+        new_values (dict): A dictionary of new values to be added to the document.
+        """
         # removing _id in case it was passed. Don't want to try and update that lol
         if "_id" in new_values.keys():
             new_values.pop("_id")
@@ -40,9 +49,18 @@ class Document:
             self.__dict__[variable] = class_value
 
     def remove(self):
+        """
+        Removes the document from the database.
+        """
         self.client.find_one_and_delete({"_id": ObjectId(self._id)})
 
     def asdict(self) -> dict:
+        """
+        Converts the document to a dictionary.
+
+        Returns:
+        dict: A dictionary representation of the document's variables.
+        """
         return self.variables
 
     def __setattr__(self, key, value):
@@ -78,6 +96,12 @@ class Variable:
         return str(self.value)
 
     def update(self, new_value: Any):
+        """
+       Updates the value of the variable in the database and the parent document.
+
+       Parameters:
+       new_value (Any): The new value to update the variable with.
+       """
         self.client.find_one_and_update(
             {"_id": ObjectId(self._id)},
             {
@@ -90,6 +114,9 @@ class Variable:
         self.parent_document.variables[self.key] = new_value
 
     def remove(self):
+        """
+        Removes the variable from the database and the parent document.
+        """
         self.client.find_one_and_update(
             {"_id": ObjectId(self._id)}, {"$unset": {self.key: ""}}
         )
@@ -104,13 +131,23 @@ class Driver:
     collection_name: str = field(repr=True)
 
     def __post_init__(self):
-        """CONNECT TO THE DB"""
+        """
+        Connect to the MongoDB database using the provided connection URL, database name, and collection name.
+        """
         self.client = pymongo.MongoClient(self.connection_url)[self.db_name][
             self.collection_name
         ]
 
     def create(self, data: dict) -> Document:
-        """CREATE A DOCUMENT FROM A DICT AND RETURN THE Document OBJECT"""
+        """
+        Create a new document in the MongoDB collection from a dictionary and return it as a Document object.
+
+        Parameters:
+        data (dict): A dictionary containing the data to be inserted into the collection.
+
+        Returns:
+        Document: A Document object representing the newly created document.
+        """
         document = self.client.insert_one(data)
         python_document = Document(document.inserted_id, data, self.client)
         return python_document
@@ -118,11 +155,23 @@ class Driver:
     def update(
             self, data: dict | Document, new_values: dict, sort: dict = None
     ) -> Document:
+        """
+        Update an existing document in the MongoDB collection with new values.
+
+        Parameters:
+        data (dict | Document): The document to be updated, either as a dictionary or a Document object.
+        new_values (dict): A dictionary of new values to update the document with.
+        sort (dict, optional): A dictionary specifying the sort order for the update operation.
+
+        Returns:
+        Document: A Document object representing the updated document.
+        """
         if "_id" in new_values.keys():
             new_values.pop("_id")
+        if sort is not None:
+            sort = sort.items()
         if isinstance(data, Document):
-            if sort is not None:
-                sort = sort.items()
+
             self.client.find_one_and_update(
                 filter={"_id": ObjectId(data._id)},
                 update={"$set": new_values},
@@ -141,13 +190,19 @@ class Driver:
                 data["_id"] = ObjectId(data["_id"])
             document = self.client.find_one_and_update(
                 filter=data,
-                update={"$set": update},
-                sort=sort.items(),
+                update={"$set": new_values},
+                sort=sort,
                 return_document=True,
             )
             return Document(document.inserted_id, data, self.client)
 
     def remove(self, data: dict | Document):
+        """
+        Remove a document from the MongoDB collection.
+
+        Parameters:
+        data (dict | Document): The document to be removed, either as a dictionary or a Document object.
+        """
         if isinstance(data, Document):
             self.client.find_one_and_delete({"_id": ObjectId(data._id)})
         else:
@@ -156,7 +211,12 @@ class Driver:
             self.client.find_one_and_delete(data)
 
     def load(self) -> List[Document]:
-        """LOADS ALL DOCUMENTS FROM DB INTO Document CLASSES"""
+        """
+        Load all documents from the MongoDB collection into Document objects.
+
+        Returns:
+        List[Document]: A list of Document objects representing all documents in the collection.
+        """
         documents = self.client.find({})
         loaded_documents = []
         for document in documents:
@@ -167,6 +227,15 @@ class Driver:
         return loaded_documents
 
     def find(self, search_terms: dict) -> List[Document]:
+        """
+        Find documents in the MongoDB collection that match the search terms and return them as Document objects.
+
+        Parameters:
+        search_terms (dict): A dictionary of search terms to filter the documents.
+
+        Returns:
+        List[Document]: A list of Document objects representing the matching documents.
+        """
         """FIND A DOCUMENT AND RETURN IT AS A Document CLASS"""
         if "_id" in search_terms.keys() and not isinstance(
                 search_terms["_id"], ObjectId
@@ -181,6 +250,15 @@ class Driver:
         return processed_documents
 
     def find_one(self, search_terms: dict) -> Document | None:
+        """
+       Find a single document in the MongoDB collection that matches the search terms and return it as a Document object.
+
+       Parameters:
+       search_terms (dict): A dictionary of search terms to filter the documents.
+
+       Returns:
+       Document | None: A Document object representing the matching document, or None if no document is found.
+       """
         if "_id" in search_terms.keys() and not isinstance(
                 search_terms["_id"], ObjectId
         ):
