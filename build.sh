@@ -1,5 +1,0 @@
-#!/bin/bash
-
-python3 -m build
-
-twine upload -u __token__ -p pypi-AgEIcHlwaS5vcmcCJGY4OTU5N2Y0LTU2OGYtNDE0Zi05YWFkLTk4MmU5N2ZlNDUwMQACE1sxLFsibW9uZ29kcml2ZXIiXV0AAixbMixbIjgzODNlZDU0LTViMWMtNDQ5NC1hZjIwLWIwZjZiYTJkOGQzZSJdXQAABiAK6RKBSRLSLdUrpahXo_1435H_H_3p7DkJt6xc0u5fDw dist/*
