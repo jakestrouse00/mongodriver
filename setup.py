@@ -6,17 +6,16 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='mongodriver',
-    version='1.3.0',
+    version='1.3.3',
     license='MIT',
     author="Jake Strouse",
     author_email='jstrouse@meh.llc',
-    packages=find_packages('src'),
+    packages=find_packages(),
     url='https://github.com/jakestrouse00/mongodriver',
-    package_dir={'': 'src'},
     keywords='mongodb',
     install_requires=[
-        'pymongo==3.12.0',
-        'pymongo[srv]==3.12.0',
+        'pymongo==4.4.1',
+        'pymongo[srv]==4.4.1',
         'motor==3.2.0',
         'motor[srv]==3.2.0'
     ],

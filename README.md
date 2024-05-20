@@ -22,7 +22,7 @@ Install MongoDriver
 `python3 -m pip install mongodriver`
 
 ```python
-from mongodriver.src.mongodriver import Driver
+from mongodriver.mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
@@ -34,7 +34,7 @@ Examples
 Here is a basic example on how to create a new document and then interact it
 
 ```python
-from mongodriver.src.mongodriver import Driver
+from mongodriver.mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
@@ -59,7 +59,7 @@ print(new_document.foo)  # 3
 Find a document
 
 ```python
-from mongodriver.src.mongodriver import Driver
+from mongodriver.mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
@@ -74,7 +74,7 @@ for document in documents:
 Load all documents from MongoDB into Document objects
 
 ```python
-from mongodriver.src.mongodriver import Driver
+from mongodriver.mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
@@ -88,7 +88,7 @@ for document in documents:
 Add more keys into a document
 
 ```python
-from mongodriver.src.mongodriver import Driver
+from mongodriver.mongodriver import Driver
 
 driver = Driver(
     connection_url="mongodb+srv://example:SecurePassword@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
