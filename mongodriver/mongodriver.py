@@ -92,7 +92,7 @@ class Variable:
     client: pymongo.collection.Collection = field(repr=False)
     parent_document: Document = field(repr=False)
 
-    def __repr__(self):
+    def __str__(self):
         return str(self.value)
 
     def update(self, new_value: Any):
@@ -286,20 +286,3 @@ class ObjectPacker:
         """UNPACK A PYTHON CLASS INTO IT'S DICT"""
         return input_object.__dict__
 
-
-if __name__ == "__main__":
-    # mongodb+srv://Influxes:test@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
-    x = Driver(
-        connection_url="mongodb+srv://Influxes:test@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-        db_name="ev_runtime",
-        collection_name="test_model",
-    )
-    # x.remove({"_id": "64b94bcbc98f284f29a7a502"})
-    # doc = x.create({"name": "dude", "year": 2007})
-    # print(doc)
-    # doc.size = "UP"
-    # print(doc)
-    # x.update(doc, {"name": "charlie"})
-    # print(doc)
-    # x.remove(doc)
-    print(x.find_one({"_id": "64b94bcbc98f284f29a7a503"}))

@@ -75,7 +75,7 @@ class Variable:
     client: AsyncIOMotorClient = field(repr=False)
     parent_document: Document = field(repr=False)
 
-    def __repr__(self):
+    def __str__(self):
         return str(self.value)
 
     async def update(self, new_value: Any):
