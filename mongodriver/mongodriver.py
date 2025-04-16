@@ -19,9 +19,12 @@ class Document:
         if "_id" in self.variables.keys():
             self.variables.pop("_id")
         for variable in self.variables.keys():
-            class_value = Variable(
-                self._id, variable, self.variables[variable], self.client, self
-            )
+            if isinstance(self.variables[variable], str):
+                class_value = StringVariable(variable, self.variables[variable], self.client, self)
+            else:
+                class_value = Variable(
+                    self._id, variable, self.variables[variable], self.client, self
+                )
             setattr(self, variable, class_value)
         self._initialized = True
 
@@ -84,6 +87,38 @@ class Document:
                 self.__dict__[key] = value
 
 
+class StringVariable(str):
+    def __new__(cls, name: str, content, client: pymongo.collection.Collection | None = None, parent_document: Document | None = None):
+        # str is immutable, so use __new__ instead of __init__
+        obj = super().__new__(cls, content)
+        obj.client = client
+        obj.parent_document = parent_document
+        obj.key = name
+        return obj
+
+    def update(self, new_value: Any):
+        self.client.find_one_and_update(
+            {"_id": ObjectId(self.parent_document._id)},
+            {
+                "$set": {
+                    self.key: new_value,
+                }
+            },
+        )
+        return StringVariable(new_value, self.client, self.parent_document)
+
+    def remove(self):
+        """
+        Removes the variable from the database and the parent document.
+        """
+        self.client.find_one_and_update(
+            {"_id": ObjectId(self.parent_document._id)}, {"$unset": {self.key: ""}}
+        )
+        self.parent_document.variables.pop(self.key)
+        self.parent_document.__dict__.pop(self.key)
+
+
+
 @dataclass
 class Variable:
     _id: str = field(repr=False)
@@ -92,7 +127,7 @@ class Variable:
     client: pymongo.collection.Collection = field(repr=False)
     parent_document: Document = field(repr=False)
 
-    def __str__(self):
+    def __repr__(self):
         return str(self.value)
 
     def update(self, new_value: Any):
@@ -286,3 +321,23 @@ class ObjectPacker:
         """UNPACK A PYTHON CLASS INTO IT'S DICT"""
         return input_object.__dict__
 
+
+if __name__ == "__main__":
+    # mongodb+srv://Influxes:test@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+    # x = Driver(
+    #     connection_url="mongodb+srv://Influxes:test@testcluster.e2lhq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    #     db_name="ev_runtime",
+    #     collection_name="test_model",
+    # )
+    m = StringVariable("hi")
+    print(type(m))
+    print(type("hi" + m))
+    # x.remove({"_id": "64b94bcbc98f284f29a7a502"})
+    # doc = x.create({"name": "dude", "year": 2007})
+    # print(doc)
+    # doc.size = "UP"
+    # print(doc)
+    # x.update(doc, {"name": "charlie"})
+    # print(doc)
+    # x.remove(doc)
+    # print(x.find_one({"_id": "64b94bcbc98f284f29a7a503"}))
